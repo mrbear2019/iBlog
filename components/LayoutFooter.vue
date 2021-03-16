@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from 'vue'
+import Vue, { PropOptions } from 'vue';
 export default Vue.extend({
     props: {
         showLogin: {
@@ -28,9 +28,9 @@ export default Vue.extend({
         return {
             year: new Date().getFullYear(),
             settings: this.$store.state.settings
-        }
+        };
     }
-})
+});
 </script>
 
 <style scoped>

@@ -92,17 +92,17 @@
     </div>
 </template>
 <script lang="ts">
-import Vue, { PropOptions } from 'vue'
-import Avatars from '@dicebear/avatars'
-import sprites from '@dicebear/avatars-jdenticon-sprites'
-import 'lazysizes'
-import CommentItem from '@/components/CommentItem.vue'
-import MdCheatSheet from '@/components/MdCheatSheet.vue'
-import { IComment } from '@/types/schema'
-import { IResp } from '@/types'
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight'
-import hljs from 'highlight.js'
-import editorEmojiPlugin from '../static/editor-emoji-plugin'
+import Vue, { PropOptions } from 'vue';
+import Avatars from '@dicebear/avatars';
+import sprites from '@dicebear/avatars-jdenticon-sprites';
+import 'lazysizes';
+import CommentItem from '@/components/CommentItem.vue';
+import MdCheatSheet from '@/components/MdCheatSheet.vue';
+import { IComment } from '@/types/schema';
+import { IResp } from '@/types';
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+import hljs from 'highlight.js';
+import editorEmojiPlugin from '../static/editor-emoji-plugin';
 export default Vue.extend({
     components: {
         CommentItem,
@@ -151,17 +151,17 @@ export default Vue.extend({
                     }
                 ]
             }
-        }
+        };
     },
     computed: {
         form(): any {
-            return this.$form.createForm(this)
+            return this.$form.createForm(this);
         },
         isGuestbook(): boolean {
-            return this.from === 1
+            return this.from === 1;
         },
         commentName(): string {
-            return this.isGuestbook ? '留言' : '评论'
+            return this.isGuestbook ? '留言' : '评论';
         },
         editorOptions(): object {
             return {
@@ -196,119 +196,119 @@ export default Vue.extend({
                     [codeSyntaxHighlight, { hljs }],
                     [editorEmojiPlugin, { index: 14 }]
                 ]
-            }
+            };
         }
     },
     created() {
-        this.getComments()
+        this.getComments();
     },
     mounted() {
-        const userInfo = localStorage.getItem('commentUserInfo')
+        const userInfo = localStorage.getItem('commentUserInfo');
         if (userInfo) {
             try {
-                const user = JSON.parse(userInfo)
-                this.form.setFieldsValue(user)
+                const user = JSON.parse(userInfo);
+                this.form.setFieldsValue(user);
             } catch (err) {}
         }
         if (this.$auth.user) {
             this.form.setFieldsValue({
                 username: 'Admin'
-            })
+            });
         }
     },
     methods: {
         async getComments() {
-            this.isLoading = true
+            this.isLoading = true;
             const { code, data }: IResp = await this.$axios.$get(`/api/${this.isGuestbook ? 'guestbook' : 'comments'}`, {
                 params: {
                     articleId: this.articleId,
                     pageIndex: this.page,
                     pageSize: this.pageSize
                 }
-            })
+            });
 
             if (code === 1) {
-                this.comments.push(...data.comments)
-                this.hasNext = data.hasNext
-                this.count = data.count
+                this.comments.push(...data.comments);
+                this.hasNext = data.hasNext;
+                this.count = data.count;
             }
-            this.isLoading = false
+            this.isLoading = false;
         },
         postComment() {
             this.form.validateFieldsAndScroll(async (error, values) => {
                 if (!error) {
-                    const content = (this.$refs.editor as any).invoke('getMarkdown').trim()
+                    const content = (this.$refs.editor as any).invoke('getMarkdown').trim();
                     if (!content) {
-                        ;(this.$refs.editor as any).invoke('focus')
-                        return
+                        (this.$refs.editor as any).invoke('focus');
+                        return;
                     }
                     const { code, data, message } = await this.$axios.$post(`/api/${this.isGuestbook ? 'guestbook' : 'comment'}`, {
                         articleId: this.articleId,
                         content,
                         ...values
-                    })
+                    });
                     if (code === 1) {
-                        this.comments.unshift(data.comment)
-                        this.count++
-                        ;(this.$refs.editor as any).invoke('setMarkdown', '')
+                        this.comments.unshift(data.comment);
+                        this.count++;
+                        (this.$refs.editor as any).invoke('setMarkdown', '');
                     } else {
-                        this.$message.error(message || `${this.commentName}失败`)
+                        this.$message.error(message || `${this.commentName}失败`);
                     }
-                    localStorage.setItem('commentUserInfo', JSON.stringify(values))
+                    localStorage.setItem('commentUserInfo', JSON.stringify(values));
                 }
-            })
+            });
         },
 
         onAddImageBlob(blob, callback) {
             if (process.client && blob) {
-                const formData = new FormData()
-                formData.append('file', blob)
+                const formData = new FormData();
+                formData.append('file', blob);
                 this.$axios.$post('/api/uploadImage', formData).then(resp => {
                     if (resp.code === 1) {
-                        callback(resp.data.url, '')
+                        callback(resp.data.url, '');
                     } else {
-                        console.error(resp.message)
-                        this.$message.error(resp.message)
+                        console.error(resp.message);
+                        this.$message.error(resp.message);
                     }
-                })
+                });
             }
         },
 
         onEditorLoad() {
-            ;(document.querySelector('.gituser-wrap .comment-btn-wrap') as HTMLElement).style.display = 'flex'
+            (document.querySelector('.gituser-wrap .comment-btn-wrap') as HTMLElement).style.display = 'flex';
         },
 
         referenceReply({ username, content }) {
-            let refText = content.replace(/^.*(\n+|$)/gm, text => '> ' + text)
-            refText = `@${username}\n` + refText + '\n\n'
-            ;(this.$refs.editor as any).invoke('setMarkdown', refText)
-            const editorComp = this.$refs.editor as any
-            editorComp.invoke('focus')
+            let refText = content.replace(/^.*(\n+|$)/gm, text => '> ' + text);
+            refText = `@${username}\n` + refText + '\n\n';
+            (this.$refs.editor as any).invoke('setMarkdown', refText);
+            const editorComp = this.$refs.editor as any;
+            editorComp.invoke('focus');
 
             if (this.isGuestbook) {
                 setTimeout(() => {
-                    window.scrollTo(0, 0)
-                }, 0)
+                    window.scrollTo(0, 0);
+                }, 0);
             } else {
-                editorComp.$el.scrollIntoViewIfNeeded()
+                editorComp.$el.scrollIntoViewIfNeeded();
             }
         },
 
         loadNext() {
-            this.page++
-            this.getComments()
+            this.page++;
+            this.getComments();
         },
         getAvatar(username: string | undefined) {
             if (!username) {
-                username = this.form.getFieldValue('username')
+                username = this.form.getFieldValue('username');
             }
             if (!username) {
-                return ''
+                return '';
             }
-            return new Avatars(sprites).create(username)
+            return new Avatars(sprites).create(username);
         }
     }
-})
+});
 </script>
 <style scoped>
 .comment-btn-wrap {

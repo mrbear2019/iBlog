@@ -130,17 +130,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import MdCheatSheet from '@/components/MdCheatSheet.vue'
-import { IResp } from '@/types'
-import { IPost } from '@/types/schema'
-import { Context } from '@nuxt/types/index'
-import { otherCategoryItem } from '@/server/models/category'
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight'
-import hljs from 'highlight.js'
-import editorEmojiPlugin from '../../static/editor-emoji-plugin'
-import 'highlight.js/styles/tomorrow.css'
-import '@/static/article.less'
+import Vue from 'vue';
+import MdCheatSheet from '@/components/MdCheatSheet.vue';
+import { IResp } from '@/types';
+import { IPost } from '@/types/schema';
+import { Context } from '@nuxt/types/index';
+import { otherCategoryItem } from '@/server/models/category';
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+import hljs from 'highlight.js';
+import editorEmojiPlugin from '../../static/editor-emoji-plugin';
+import 'highlight.js/styles/tomorrow.css';
+import '@/static/article.less';
 export default Vue.extend({
     name: 'PageAdminArticle',
     layout: 'admin',
@@ -152,28 +152,28 @@ export default Vue.extend({
         MdCheatSheet
     },
     async asyncData({ $axios, query, error }: Context) {
-        const uid = query.uid
+        const uid = query.uid;
         if (uid) {
             const { code, data } = await $axios.$get('/api/admin/article', {
                 params: {
                     uid
                 }
-            })
+            });
             if (code === 1) {
                 if (data && data.isActive) {
                     return {
                         initialData: data
-                    }
+                    };
                 }
                 error({
                     statusCode: 404,
                     message: '未找到该页面'
-                })
+                });
             } else {
                 error({
                     statusCode: 500,
                     message: '内部服务器错误'
-                })
+                });
             }
         } else {
             return {
@@ -181,7 +181,7 @@ export default Vue.extend({
                     isLocal: true,
                     commentsFlag: 0
                 }
-            }
+            };
         }
     },
     data() {
@@ -214,14 +214,14 @@ export default Vue.extend({
                 initialValue: 0
             },
             categoryLoading: false
-        }
+        };
     },
     computed: {
         pageHeader(): string {
-            return this.initialData._id ? '编辑文章' : '新增文章'
+            return this.initialData._id ? '编辑文章' : '新增文章';
         },
         form(): any {
-            return this.$form.createForm(this)
+            return this.$form.createForm(this);
         },
         aliasOpts(): object {
             return {
@@ -234,7 +234,7 @@ export default Vue.extend({
                         validator: this.checkAlias
                     }
                 ]
-            }
+            };
         },
         urlOpts(): object {
             return {
@@ -248,11 +248,11 @@ export default Vue.extend({
                         message: '链接地址格式不正确！'
                     }
                 ]
-            }
+            };
         },
         editorOptions(): object {
             if (process.server) {
-                return {}
+                return {};
             }
 
             const escape = function(html, encode) {
@@ -261,45 +261,45 @@ export default Vue.extend({
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;')
                     .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;')
-            }
-            const Editor = require('@toast-ui/editor')
+                    .replace(/'/g, '&#39;');
+            };
+            const Editor = require('@toast-ui/editor');
             const codeBlockPlugin = function() {
                 Editor.codeBlockManager.createCodeBlockHtml = (lang, str) => {
-                    let showLang = ''
-                    let code = ''
+                    let showLang = '';
+                    let code = '';
                     if (lang) {
-                        showLang = lang.toUpperCase()
+                        showLang = lang.toUpperCase();
                         if (showLang === 'JS') {
-                            showLang = 'JAVASCRIPT'
+                            showLang = 'JAVASCRIPT';
                         } else if (showLang === 'TS') {
-                            showLang = 'TYPESCRIPT'
+                            showLang = 'TYPESCRIPT';
                         }
-                        const langObj = hljs.getLanguage(lang)
+                        const langObj = hljs.getLanguage(lang);
                         if (langObj) {
                             try {
-                                code = hljs.highlight(lang, str, true).value
+                                code = hljs.highlight(lang, str, true).value;
                             } catch (err) {}
                         }
                     }
                     if (!code) {
-                        code = escape(str, false)
+                        code = escape(str, false);
                     }
 
                     // 特殊：信息代码块
                     if (showLang === 'INFO') {
-                        return `<pre class="hljs info"><code><svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="info-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-info-circle"><path fill="currentColor" d="M256 40c118.621 0 216 96.075 216 216 0 119.291-96.61 216-216 216-119.244 0-216-96.562-216-216 0-119.203 96.602-216 216-216m0-32C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm-36 344h12V232h-12c-6.627 0-12-5.373-12-12v-8c0-6.627 5.373-12 12-12h48c6.627 0 12 5.373 12 12v140h12c6.627 0 12 5.373 12 12v8c0 6.627-5.373 12-12 12h-72c-6.627 0-12-5.373-12-12v-8c0-6.627 5.373-12 12-12zm36-240c-17.673 0-32 14.327-32 32s14.327 32 32 32 32-14.327 32-32-14.327-32-32-32z" class=""></path></svg>${code}</code></pre>`
+                        return `<pre class="hljs info"><code><svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="info-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-info-circle"><path fill="currentColor" d="M256 40c118.621 0 216 96.075 216 216 0 119.291-96.61 216-216 216-119.244 0-216-96.562-216-216 0-119.203 96.602-216 216-216m0-32C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm-36 344h12V232h-12c-6.627 0-12-5.373-12-12v-8c0-6.627 5.373-12 12-12h48c6.627 0 12 5.373 12 12v140h12c6.627 0 12 5.373 12 12v8c0 6.627-5.373 12-12 12h-72c-6.627 0-12-5.373-12-12v-8c0-6.627 5.373-12 12-12zm36-240c-17.673 0-32 14.327-32 32s14.327 32 32 32 32-14.327 32-32-14.327-32-32-32z" class=""></path></svg>${code}</code></pre>`;
                     }
 
                     // 特殊：警告代码块
                     if (showLang === 'ALERT') {
-                        return `<pre class="hljs alert"><code><svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="exclamation-triangle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-exclamation-triangle"><path fill="currentColor" d="M270.2 160h35.5c3.4 0 6.1 2.8 6 6.2l-7.5 196c-.1 3.2-2.8 5.8-6 5.8h-20.5c-3.2 0-5.9-2.5-6-5.8l-7.5-196c-.1-3.4 2.6-6.2 6-6.2zM288 388c-15.5 0-28 12.5-28 28s12.5 28 28 28 28-12.5 28-28-12.5-28-28-28zm281.5 52L329.6 24c-18.4-32-64.7-32-83.2 0L6.5 440c-18.4 31.9 4.6 72 41.6 72H528c36.8 0 60-40 41.5-72zM528 480H48c-12.3 0-20-13.3-13.9-24l240-416c6.1-10.6 21.6-10.7 27.7 0l240 416c6.2 10.6-1.5 24-13.8 24z" class=""></path></svg>${code}</code></pre>`
+                        return `<pre class="hljs alert"><code><svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="exclamation-triangle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="svg-inline--fa fa-exclamation-triangle"><path fill="currentColor" d="M270.2 160h35.5c3.4 0 6.1 2.8 6 6.2l-7.5 196c-.1 3.2-2.8 5.8-6 5.8h-20.5c-3.2 0-5.9-2.5-6-5.8l-7.5-196c-.1-3.4 2.6-6.2 6-6.2zM288 388c-15.5 0-28 12.5-28 28s12.5 28 28 28 28-12.5 28-28-12.5-28-28-28zm281.5 52L329.6 24c-18.4-32-64.7-32-83.2 0L6.5 440c-18.4 31.9 4.6 72 41.6 72H528c36.8 0 60-40 41.5-72zM528 480H48c-12.3 0-20-13.3-13.9-24l240-416c6.1-10.6 21.6-10.7 27.7 0l240 416c6.2 10.6-1.5 24-13.8 24z" class=""></path></svg>${code}</code></pre>`;
                     }
 
                     // 特殊：以冒号开头的，视为特殊代码块
                     if (showLang.startsWith(':')) {
-                        const header = showLang.substring(1)
-                        return `<pre class="hljs custom"><div class="pre-header">${header}</div><code>${code}</code></pre>`
+                        const header = showLang.substring(1);
+                        return `<pre class="hljs custom"><div class="pre-header">${header}</div><code>${code}</code></pre>`;
                     }
                     return (
                         '<pre class="hljs"><div class="pre-header"><div class="pre-header-left"><div></div><div></div><div></div></div><div class="pre-header-right">' +
@@ -307,9 +307,9 @@ export default Vue.extend({
                         '</div></div><code>' +
                         code +
                         '</code></pre>'
-                    )
-                }
-            }
+                    );
+                };
+            };
 
             return {
                 hideModeSwitch: true,
@@ -377,11 +377,11 @@ export default Vue.extend({
                     addImageBlobHook: (this as any).onAddImageBlob
                 },
                 plugins: [[codeSyntaxHighlight, { hljs }], codeBlockPlugin, [editorEmojiPlugin, { index: 15 }]]
-            }
+            };
         }
     },
     created() {
-        this.getCategories()
+        this.getCategories();
     },
     mounted() {
         if (this.initialData._id) {
@@ -394,84 +394,84 @@ export default Vue.extend({
                 url: this.initialData.url || '',
                 labels: this.initialData.labels,
                 commentsFlag: this.initialData.commentsFlag
-            })
+            });
             this.$nextTick(() => {
-                ;(this.$refs.editor as any).invoke('setMarkdown', this.initialData.content)
-            })
+                (this.$refs.editor as any).invoke('setMarkdown', this.initialData.content);
+            });
         }
-        this.$refs.titleInput.focus()
+        this.$refs.titleInput.focus();
     },
     methods: {
         async getCategories() {
-            const { code, data }: IResp = await this.$axios.$get('/api/admin/categories')
+            const { code, data }: IResp = await this.$axios.$get('/api/admin/categories');
             if (code === 1) {
-                this.categories = data
+                this.categories = data;
             }
         },
         async refreshCategories() {
-            this.categoryLoading = true
-            await this.getCategories()
-            this.categoryLoading = false
+            this.categoryLoading = true;
+            await this.getCategories();
+            this.categoryLoading = false;
         },
         createElementFromHTML(htmlString) {
-            const button = document.createElement('button')
-            button.className = 'custom-button'
-            button.innerHTML = htmlString.trim()
-            return button
+            const button = document.createElement('button');
+            button.className = 'custom-button';
+            button.innerHTML = htmlString.trim();
+            return button;
         },
         onEditorLoad() {
             setTimeout(() => {
-                const editor = this.$refs.editor.editor
-                editor.eventManager.addEventType('evtInfo')
+                const editor = this.$refs.editor.editor;
+                editor.eventManager.addEventType('evtInfo');
                 editor.eventManager.listen('evtInfo', () => {
-                    this.editorEvent(editor, 'info')
-                })
-                editor.eventManager.addEventType('evtAlert')
+                    this.editorEvent(editor, 'info');
+                });
+                editor.eventManager.addEventType('evtAlert');
                 editor.eventManager.listen('evtAlert', () => {
-                    this.editorEvent(editor, 'alert')
-                })
-                editor.eventManager.addEventType('evtFullscreen')
+                    this.editorEvent(editor, 'alert');
+                });
+                editor.eventManager.addEventType('evtFullscreen');
                 editor.eventManager.listen('evtFullscreen', () => {
                     if (document.fullscreen) {
-                        document.exitFullscreen()
+                        document.exitFullscreen();
                     } else {
-                        ;(document.querySelector('.tui-editor-defaultUI') as HTMLElement).requestFullscreen()
+                        (document.querySelector('.tui-editor-defaultUI') as HTMLElement).requestFullscreen();
                     }
-                })
-            }, 0)
+                });
+            }, 0);
         },
         editorEvent(editor, type: string) {
-            const cm = editor.getCodeMirror()
-            const doc = cm.getDoc()
+            const cm = editor.getCodeMirror();
+            const doc = cm.getDoc();
             const range = {
                 from: cm.getCursor('from'),
                 to: cm.getCursor('to')
-            }
-            const replaceText = ['```' + type, doc.getSelection(), '```']
-            let cursorOffset = 1
+            };
+            const replaceText = ['```' + type, doc.getSelection(), '```'];
+            let cursorOffset = 1;
             if (range.from.ch !== 0) {
-                replaceText.unshift('')
-                cursorOffset += 1
+                replaceText.unshift('');
+                cursorOffset += 1;
             }
             if (range.to.ch !== doc.getLine(range.to.line).length) {
-                replaceText.push('')
+                replaceText.push('');
             }
-            doc.replaceSelection(replaceText.join('\n'))
-            cm.setCursor(range.from.line + cursorOffset, 0)
-            cm.focus()
+            doc.replaceSelection(replaceText.join('\n'));
+            cm.setCursor(range.from.line + cursorOffset, 0);
+            cm.focus();
         },
         onAddImageBlob(blob, callback) {
             if (process.client && blob) {
-                const formData = new FormData()
-                formData.append('file', blob)
+                const formData = new FormData();
+                formData.append('file', blob);
                 this.$axios.$post('/api/uploadImage', formData).then(resp => {
                     if (resp.code === 1) {
-                        callback(resp.data.url, '')
+                        callback(resp.data.url, '');
                     } else {
-                        console.error(resp.message)
-                        this.$message.error(resp.message)
+                        console.error(resp.message);
+                        this.$message.error(resp.message);
                     }
-                })
+                });
             }
         },
         checkAlias(_rule, value, callback) {
@@ -485,36 +485,36 @@ export default Vue.extend({
                     })
                     .then(({ code, data }: IResp) => {
                         if (code === 1 && !data.exists) {
-                            callback()
+                            callback();
                         } else {
                             // eslint-disable-next-line standard/no-callback-literal
-                            callback('alias已存在！')
+                            callback('alias已存在！');
                         }
-                    })
+                    });
             } else {
-                callback()
+                callback();
             }
         },
         isLocalChange(e) {
-            this.initialData.isLocal = e.target.value
+            this.initialData.isLocal = e.target.value;
 
             // 切换本地外链后，光标聚焦
             this.$nextTick(() => {
                 if (!this.initialData.isLocal) {
-                    this.$refs.urlInputComp.focus()
+                    this.$refs.urlInputComp.focus();
                 } else {
-                    this.$refs.aliasInputComp.focus()
+                    this.$refs.aliasInputComp.focus();
                 }
-            })
+            });
         },
         publish() {
             this.form.validateFieldsAndScroll((error, values) => {
                 if (!error) {
-                    const self = this
+                    const self = this;
                     const data = {
                         content: (this.$refs.editor as any).invoke('getMarkdown'),
                         ...values
-                    }
+                    };
                     this.$confirm({
                         title: '确定要发布吗？',
                         okText: '确定',
@@ -523,31 +523,35 @@ export default Vue.extend({
                             return new Promise((resolve, reject) => {
                                 self.$axios.$post('/api/admin/article', data).then(resp => {
                                     if (resp.code === 1) {
-                                        self.initialData = resp.data.article
-                                        history.replaceState(null, '', `${location.protocol}//${location.host}${location.pathname}?uid=${self.initialData._id}`)
-                                        resolve()
-                                        self.$message.success('文章发布成功！')
+                                        self.initialData = resp.data.article;
+                                        history.replaceState(
+                                            null,
+                                            '',
+                                            `${location.protocol}//${location.host}${location.pathname}?uid=${self.initialData._id}`
+                                        );
+                                        resolve();
+                                        self.$message.success('文章发布成功！');
                                     } else {
-                                        console.error(resp.message)
-                                        reject(resp.message)
-                                        self.$message.error('操作失败！')
+                                        console.error(resp.message);
+                                        reject(resp.message);
+                                        self.$message.error('操作失败！');
                                     }
-                                })
-                            })
+                                });
+                            });
                         }
-                    })
+                    });
                 }
-            })
+            });
         },
         publish2() {
             this.form.validateFieldsAndScroll((error, values) => {
                 if (!error) {
-                    const self = this
+                    const self = this;
                     const data = {
                         content: (this.$refs.editor as any).invoke('getMarkdown'),
                         isDraft: false,
                         ...values
-                    }
+                    };
                     this.$confirm({
                         title: '确定要发布吗？',
                         okText: '确定',
@@ -563,45 +567,45 @@ export default Vue.extend({
                                     })
                                     .then(resp => {
                                         if (resp.code === 1) {
-                                            self.initialData = resp.data.article
-                                            resolve()
-                                            self.$message.success('文章发布成功！')
+                                            self.initialData = resp.data.article;
+                                            resolve();
+                                            self.$message.success('文章发布成功！');
                                         } else {
-                                            console.error(resp.message)
-                                            reject(resp.message)
-                                            self.$message.error('操作失败！')
+                                            console.error(resp.message);
+                                            reject(resp.message);
+                                            self.$message.error('操作失败！');
                                         }
-                                    })
-                            })
+                                    });
+                            });
                         }
-                    })
+                    });
                 }
-            })
+            });
         },
         saveDraft() {
             this.form.validateFieldsAndScroll((error, values) => {
                 if (!error) {
-                    const self = this
+                    const self = this;
                     const data = {
                         content: (this.$refs.editor as any).invoke('getMarkdown'),
                         isDraft: true,
                         ...values
-                    }
+                    };
                     this.$axios.$post('/api/admin/article', data).then(resp => {
                         if (resp.code === 1) {
-                            self.initialData = resp.data.article
-                            history.replaceState(null, '', `${location.protocol}//${location.host}${location.pathname}?uid=${self.initialData._id}`)
-                            self.$message.success('新建草稿成功！')
+                            self.initialData = resp.data.article;
+                            history.replaceState(null, '', `${location.protocol}//${location.host}${location.pathname}?uid=${self.initialData._id}`);
+                            self.$message.success('新建草稿成功！');
                         } else {
-                            console.error(resp.message)
-                            self.$message.error('操作失败！')
+                            console.error(resp.message);
+                            self.$message.error('操作失败！');
                         }
-                    })
+                    });
                 }
-            })
+            });
         },
         unpublish() {
-            const self = this
+            const self = this;
             this.$confirm({
                 title: '确定要取消发布吗？',
                 content: '文章将变成草稿状态，只有你自己可见。',
@@ -624,27 +628,27 @@ export default Vue.extend({
                             )
                             .then(resp => {
                                 if (resp.code === 1) {
-                                    self.initialData = resp.data.article
-                                    resolve()
-                                    self.$message.success('取消发布成功！')
+                                    self.initialData = resp.data.article;
+                                    resolve();
+                                    self.$message.success('取消发布成功！');
                                 } else {
-                                    console.error(resp.message)
-                                    reject(resp.message)
-                                    self.$message.error('操作失败！')
+                                    console.error(resp.message);
+                                    reject(resp.message);
+                                    self.$message.error('操作失败！');
                                 }
-                            })
-                    })
+                            });
+                    });
                 }
-            })
+            });
         },
         save() {
             this.form.validateFieldsAndScroll((error, values) => {
                 if (!error) {
-                    const self = this
+                    const self = this;
                     const data = {
                         content: (this.$refs.editor as any).invoke('getMarkdown'),
                         ...values
-                    }
+                    };
                     this.$axios
                         .$put('/api/admin/article', data, {
                             params: {
@@ -653,17 +657,17 @@ export default Vue.extend({
                         })
                         .then(resp => {
                             if (resp.code === 1) {
-                                self.$message.success('保存成功！')
+                                self.$message.success('保存成功！');
                             } else {
-                                console.error(resp.message)
-                                self.$message.error('操作失败！')
+                                console.error(resp.message);
+                                self.$message.error('操作失败！');
                             }
-                        })
+                        });
                 }
-            })
+            });
         }
     }
-})
+});
 </script>
 
 <style scoped>

@@ -20,9 +20,9 @@
     </a-locale-provider>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
-import LayoutFooter from '@/components/LayoutFooter.vue'
+import Vue from 'vue';
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import LayoutFooter from '@/components/LayoutFooter.vue';
 export default Vue.extend({
     components: {
         LayoutFooter
@@ -31,9 +31,9 @@ export default Vue.extend({
         return {
             settings: this.$store.state.settings,
             zhCN
-        }
+        };
     }
-})
+});
 </script>
 <style scoped>
 .auth-wrap {

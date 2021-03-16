@@ -23,9 +23,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import md5 from 'blueimp-md5'
-import { IResp } from '@/types'
+import Vue from 'vue';
+import md5 from 'blueimp-md5';
+import { IResp } from '@/types';
 export default Vue.extend({
     data() {
         return {
@@ -46,7 +46,7 @@ export default Vue.extend({
                     }
                 ]
             }
-        }
+        };
     },
     computed: {
         pwd2Opts() {
@@ -60,44 +60,44 @@ export default Vue.extend({
                         validator: (this as any).compareToFirstPassword
                     }
                 ]
-            }
+            };
         }
     },
     beforeCreate(this: any) {
-        this.form = this.$form.createForm(this)
+        this.form = this.$form.createForm(this);
     },
     mounted() {
-        ;(this.$refs.pwd1 as any).$children[0].focus()
+        (this.$refs.pwd1 as any).$children[0].focus();
     },
     methods: {
         compareToFirstPassword(_rule, value, callback) {
-            const form = (this as any).form
+            const form = (this as any).form;
             if (value && value !== form.getFieldValue('pwd1')) {
                 // eslint-disable-next-line standard/no-callback-literal
-                callback('两次输入的密码不一致！')
+                callback('两次输入的密码不一致！');
             } else {
-                callback()
+                callback();
             }
         },
         save(this: any) {
             this.form.validateFields(async (error, values) => {
                 if (!error) {
-                    this.btnLoading = true
+                    this.btnLoading = true;
                     const { code, message }: IResp = await this.$axios.$put('/api/auth/account', {
                         password: md5(values.pwd1)
-                    })
+                    });
                     if (code === 1) {
-                        this.$emit('init')
+                        this.$emit('init');
                     } else {
-                        console.error(message)
-                        this.$message.error('操作失败！')
-                        this.btnLoading = false
+                        console.error(message);
+                        this.$message.error('操作失败！');
+                        this.btnLoading = false;
                     }
                 }
-            })
+            });
         }
     }
-})
+});
 </script>
 
 <style scoped>

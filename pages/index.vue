@@ -96,19 +96,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import moment from 'moment'
-import { allCategoryItem } from '@/server/models/category'
-import { IResp } from '@/types'
-import { IPost, ICategory, ISetting } from '@/types/schema'
-import { Context } from '@nuxt/types/index'
-import CategoryList from '@/components/CategoryList.vue'
-import PostItem from '@/components/PostItem.vue'
-import BlogIntro from '@/components/widgets/blogIntro.vue'
-import ArticleCalendar from '@/components/widgets/articleCalendar.vue'
-import PopArticles from '@/components/widgets/popArticles.vue'
-import PopLabels from '@/components/widgets/popLabels.vue'
-import 'highlight.js/styles/tomorrow.css'
+import Vue from 'vue';
+import moment from 'moment';
+import { allCategoryItem } from '@/server/models/category';
+import { IResp } from '@/types';
+import { IPost, ICategory, ISetting } from '@/types/schema';
+import { Context } from '@nuxt/types/index';
+import CategoryList from '@/components/CategoryList.vue';
+import PostItem from '@/components/PostItem.vue';
+import BlogIntro from '@/components/widgets/blogIntro.vue';
+import ArticleCalendar from '@/components/widgets/articleCalendar.vue';
+import PopArticles from '@/components/widgets/popArticles.vue';
+import PopLabels from '@/components/widgets/popLabels.vue';
+import 'highlight.js/styles/tomorrow.css';
 
 export default Vue.extend({
     scrollToTop: true,
@@ -122,12 +122,12 @@ export default Vue.extend({
     },
     async asyncData({ $axios, params, error }: Context) {
         try {
-            const [resp1, resp2]: Array<IResp> = await Promise.all([$axios.$get('/api/categories'), $axios.$get('/api/settings')])
+            const [resp1, resp2]: Array<IResp> = await Promise.all([$axios.$get('/api/categories'), $axios.$get('/api/settings')]);
             if (resp1.code === 1 && resp2.code === 1) {
-                const categories = resp1.data || []
-                categories.unshift(allCategoryItem)
-                const alias = params.category || ''
-                const category = categories.find(item => item.alias === alias)
+                const categories = resp1.data || [];
+                categories.unshift(allCategoryItem);
+                const alias = params.category || '';
+                const category = categories.find(item => item.alias === alias);
                 if (category) {
                     const { code, data }: IResp = await $axios.$get('/api/posts', {
                         params: {
@@ -138,7 +138,7 @@ export default Vue.extend({
                             keyword: '',
                             sortBy: 'date'
                         }
-                    })
+                    });
                     if (code === 1) {
                         return {
                             categories,
@@ -146,29 +146,29 @@ export default Vue.extend({
                             posts: data.postList,
                             hasNext: data.hasNext,
                             count: data.count
-                        }
+                        };
                     }
                     error({
                         statusCode: 500,
                         message: '内部服务器错误'
-                    })
+                    });
                 } else {
                     error({
                         statusCode: 404,
                         message: '未找到该页面'
-                    })
+                    });
                 }
             } else {
                 error({
                     statusCode: 500,
                     message: '内部服务器错误'
-                })
+                });
             }
         } catch (err) {
             error({
                 statusCode: 500,
                 message: '内部服务器错误'
-            })
+            });
         }
     },
 
@@ -197,39 +197,39 @@ export default Vue.extend({
                 最近一个月: [moment().subtract(30, 'days'), moment()],
                 最近一年: [moment().subtract(365, 'days'), moment()]
             }
-        }
+        };
     },
     computed: {
         searchPhd(): string {
-            let placeholder = ''
+            let placeholder = '';
             switch (this.filterType) {
                 case 'text':
-                    placeholder = '全文关键打字'
-                    break
+                    placeholder = '全文关键打字';
+                    break;
                 case 'title':
-                    placeholder = '标关键字'
-                    break
+                    placeholder = '标关键字';
+                    break;
                 case 'tag':
-                    placeholder = '标签关键字'
-                    break
+                    placeholder = '标签关键字';
+                    break;
                 default:
             }
-            return placeholder
+            return placeholder;
         },
         inputDate(): Array<string> {
-            const range = this.inputDateMoment
+            const range = this.inputDateMoment;
             if (!range.length) {
-                return []
+                return [];
             }
-            return [range[0].startOf('day').toString(), range[1].endOf('day').toString()]
+            return [range[0].startOf('day').toString(), range[1].endOf('day').toString()];
         }
     },
     methods: {
         disabledDate(date) {
-            return date && date > moment().endOf('day')
+            return date && date > moment().endOf('day');
         },
         async getPosts() {
-            this.isLoading = true
+            this.isLoading = true;
             const { code, data }: IResp = await this.$axios.$get('/api/posts', {
                 params: {
                     category: this.category._id,
@@ -239,81 +239,81 @@ export default Vue.extend({
                     keyword: this.keyword,
                     sortBy: this.sortBy
                 }
-            })
+            });
 
             if (code === 1) {
-                this.posts.push(...data.postList)
-                this.hasNext = data.hasNext
-                this.count = data.count
+                this.posts.push(...data.postList);
+                this.hasNext = data.hasNext;
+                this.count = data.count;
             }
-            this.isLoading = false
+            this.isLoading = false;
         },
         loadNext() {
-            this.page++
-            this.getPosts()
+            this.page++;
+            this.getPosts();
         },
         filterTypeChange() {
             if (this.filterType !== 'date') {
                 this.$nextTick(() => {
-                    ;(this.$refs.inputComp as any).focus()
-                })
+                    (this.$refs.inputComp as any).focus();
+                });
             }
         },
         async search(checkKeyword = true) {
-            let input: Array<string> | string
+            let input: Array<string> | string;
             if (this.filterType === 'date') {
-                input = this.inputDate
+                input = this.inputDate;
                 if (checkKeyword && !input[0] && !input[1]) {
-                    return
+                    return;
                 }
             } else {
-                input = this.inputTxt
+                input = this.inputTxt;
                 if (checkKeyword && !input) {
-                    ;(this.$refs.inputComp as any).focus()
-                    return
+                    (this.$refs.inputComp as any).focus();
+                    return;
                 }
             }
-            this.alertShow = false
-            this.posts = []
-            this.page = 1
-            this.hasNext = false
-            this.keyword = input
-            await this.getPosts()
+            this.alertShow = false;
+            this.posts = [];
+            this.page = 1;
+            this.hasNext = false;
+            this.keyword = input;
+            await this.getPosts();
             if (input) {
-                this.alertShow = true
+                this.alertShow = true;
             }
         },
         clearSearch() {
-            this.alertShow = false
-            this.posts = []
-            this.page = 1
-            this.hasNext = false
-            this.keyword = ''
-            this.inputTxt = ''
-            this.inputDateMoment = []
-            this.getPosts()
+            this.alertShow = false;
+            this.posts = [];
+            this.page = 1;
+            this.hasNext = false;
+            this.keyword = '';
+            this.inputTxt = '';
+            this.inputDateMoment = [];
+            this.getPosts();
         },
         sortList(sortBy) {
             if (this.sortBy === sortBy) {
-                return
+                return;
             }
-            this.sortBy = sortBy
-            this.search(false)
+            this.sortBy = sortBy;
+            this.search(false);
         },
         selectCalendar(inputDateMoment: [moment.Moment, moment.Moment]) {
-            this.filterType = 'date'
-            this.inputDateMoment = inputDateMoment
-            this.search()
+            this.filterType = 'date';
+            this.inputDateMoment = inputDateMoment;
+            this.search();
         },
         selectLabel(tag) {
-            this.filterType = 'tag'
-            this.inputTxt = tag
-            this.search()
+            this.filterType = 'tag';
+            this.inputTxt = tag;
+            this.search();
         }
     },
     head(this: any) {
-        const settings = this.$store.state.settings as ISetting
-        const suffix = ` - ${settings.blogName}`
+        const settings = this.$store.state.settings as ISetting;
+        const suffix = ` - ${settings.blogName}`;
         return {
             title: this.category.cateName + suffix,
             meta: [
@@ -324,9 +324,9 @@ export default Vue.extend({
                 },
                 { name: 'keywords', content: settings.blogName }
             ]
-        }
+        };
     }
-})
+});
 </script>
 
 <style scoped>
