@@ -1,5 +1,5 @@
 import { connect, connection, Connection, Model } from 'mongoose';
-import { IPost, ICategory, IComment, ICache, ISetting, IProfile, IAuth } from '@/types/schema';
+import {IPost, ICategory, IComment, ICache, ISetting, IProfile, IAuth, IEps_article} from '@/types/schema';
 import config from '../blog.config';
 import { Post } from './models/post';
 import { Cache } from './models/cache';
@@ -9,6 +9,7 @@ import { Guestbook } from './models/guestbook';
 import { Setting } from './models/setting';
 import { Profile } from './models/profile';
 import { Auth } from './models/auth';
+import { Eps_article } from './models/eps_article';
 
 /**
  * 重连次数
@@ -24,6 +25,7 @@ interface IModels {
     Setting: Model<ISetting>;
     Profile: Model<IProfile>;
     Auth: Model<IAuth>;
+    Eps_article:Model<IEps_article>
 }
 
 export default class DB {
@@ -49,7 +51,8 @@ export default class DB {
             Guestbook: new Guestbook().model,
             Setting: new Setting().model,
             Profile: new Profile().model,
-            Auth: new Auth().model
+            Auth: new Auth().model,
+            Eps_article: new Eps_article().model,
         };
     }
 
