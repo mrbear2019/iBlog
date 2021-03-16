@@ -10,6 +10,7 @@ import Vue from 'vue';
 import CommentList from '@/components/CommentList.vue';
 import 'highlight.js/styles/tomorrow.css';
 import { ISetting } from '@/types/schema';
+
 export default Vue.extend({
   name: 'PageGuestBook',
   components: {
@@ -21,7 +22,11 @@ export default Vue.extend({
     return {
       title: '留言' + suffix,
       meta: [
-        { hid: 'description', name: 'description', content: settings.blogIntro || settings.blogName },
+        {
+          hid: 'description',
+          name: 'description',
+          content: settings.blogIntro || settings.blogName
+        },
         { name: 'keywords', content: settings.blogName }
       ]
     };
@@ -30,13 +35,14 @@ export default Vue.extend({
 </script>
 <style scoped>
 .guestbook-wrap {
-  background: #f3f3f4;
-  min-height: 85vh;
-  padding-top: 20px;
+    background: #f3f3f4;
+    min-height: 85vh;
+    padding-top: 20px;
 }
+
 .list-wrap {
-  max-width: 1012px;
-  margin: 0 auto 20px;
-  padding-bottom: 40px;
+    max-width: 1012px;
+    margin: 0 auto 20px;
+    padding-bottom: 40px;
 }
 </style>
