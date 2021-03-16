@@ -4,10 +4,10 @@ import { IAuth } from '@/types/schema';
 export class Auth {
     private _model: Model<IAuth>;
 
-    constructor() {
+    constructor()  {
         const schema = new Schema<IAuth>(
             {
-                // 密码（已md5加密）
+                  // 密码（已md5加密）
                 password: { type: String },
 
                 // 创建时间
