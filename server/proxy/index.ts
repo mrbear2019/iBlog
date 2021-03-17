@@ -97,6 +97,7 @@ export async function getEps_articles(params) {
     };
     if (params.category) {
         conditions.category = params.category;
+        conditions.category = params.category;
     }
     const keyword = params.keyword;
     if (keyword) {
