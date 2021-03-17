@@ -21,6 +21,12 @@
                             <span>文章管理</span>
                         </nuxt-link>
                     </a-menu-item>
+                    <a-menu-item key="article-manage-new" title="新文管理">
+                        <nuxt-link to="/admin/article-manage-new">
+                            <font-awesome-icon :icon="['fas', 'comments']" fixed-width />
+                            <span>新文管理</span>
+                        </nuxt-link>
+                    </a-menu-item>
                     <a-menu-item key="category-manage" title="分类管理">
                         <nuxt-link to="/admin/category-manage">
                             <font-awesome-icon :icon="['fas', 'map-signs']" fixed-width />

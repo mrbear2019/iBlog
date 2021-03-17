@@ -1,5 +1,5 @@
 import { connect, connection, Connection, Model } from 'mongoose';
-import {IPost, ICategory, IComment, ICache, ISetting, IProfile, IAuth, IEps_article} from '@/types/schema';
+import { IPost, ICategory, IComment, ICache, ISetting, IProfile, IAuth, IEps_article } from '@/types/schema';
 import config from '../blog.config';
 import { Post } from './models/post';
 import { Cache } from './models/cache';
@@ -25,7 +25,7 @@ interface IModels {
     Setting: Model<ISetting>;
     Profile: Model<IProfile>;
     Auth: Model<IAuth>;
-    Eps_article:Model<IEps_article>
+    Eps_article: Model<IEps_article>;
 }
 
 export default class DB {
@@ -52,7 +52,7 @@ export default class DB {
             Setting: new Setting().model,
             Profile: new Profile().model,
             Auth: new Auth().model,
-            Eps_article: new Eps_article().model,
+            Eps_article: new Eps_article().model
         };
     }
 

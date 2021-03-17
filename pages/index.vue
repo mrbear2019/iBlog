@@ -129,7 +129,7 @@ export default Vue.extend({
                 const alias = params.category || '';
                 const category = categories.find(item => item.alias === alias);
                 if (category) {
-                    const { code, data }: IResp = await $axios.$get('/api/posts', {
+                    const { code, data }: IResp = await $axios.$get('/api/eps_articles', {
                         params: {
                             category: category._id,
                             pageIndex: 1,

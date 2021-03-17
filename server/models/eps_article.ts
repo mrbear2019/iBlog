@@ -6,10 +6,10 @@ import hljs from 'highlight.js';
 import { IEps_article } from '@/types/schema';
 
 export class Eps_article {
-    private _model: Model<IEps_article;
+    private _model: Model<IEps_article>;
 
     constructor() {
-        const schema = new Schema<IEps_article(
+        const schema = new Schema<IEps_article>(
             {
                 // 标题
                 title: { type: String },
@@ -134,7 +134,7 @@ export class Eps_article {
         }
     }
 
-    public get model(): Model<IEps_article {
+    public get model(): Model<IEps_article> {
         return this._model;
     }
 }
